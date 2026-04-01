@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>김지훈 — 프론트엔드 개발자</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ════════════════════════════════════════════════
+       PDF / PRINT 핵심 원칙
+       1. 폭 고정: 210mm (A4) — vw/clamp 일절 금지
+       2. 폰트 단위 pt 기반 (1pt = 1/72 inch, 인쇄 표준)
+       3. 배경색 강제 출력: -webkit-print-color-adjust: exact
+       4. 페이지 분리 제어: break-inside / break-after
+       5. hover·animation·transition 전부 제거
+       6. 그림자 최소화 (인쇄 시 번짐)
+       7. 2단 레이아웃: display:table → PDF 렌더러 호환성 우수
+    ════════════════════════════════════════════════ */
+
+    :root {
+      --stone-50:  #fafaf9;
+      --stone-100: #f5f5f4;
+      --stone-200: #e7e5e4;
+      --stone-300: #d6d3d1;
+      --stone-400: #a8a29e;
+      --stone-500: #78716c;
+      --stone-600: #57534e;
+      --stone-700: #44403c;
+      --stone-800: #292524;
+      --stone-900: #1c1917;
+      --accent:    #0f766e;
+      --page-w:    210mm;
+      --side-w:    62mm;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 8.5pt;
+      line-height: 1.65;
+      color: var(--stone-900);
+      background: #c8c8c8;
+      -webkit-font-smoothing: antialiased;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* A4 용지 컨테이너 */
+    .page {
+      width: var(--page-w);
+      min-height: 297mm;
+      margin: 8mm auto;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 3px 20px rgba(0,0,0,0.22);
+    }
+
+    /* ════ HEADER ════════════════════════════════════ */
+    .page-header {
+      background-color: var(--stone-900);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      padding: 7mm 8mm 6mm;
+      flex-shrink: 0;
+    }
+
+    .header-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 3.5mm;
+    }
+
+    .name {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 22pt;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      margin-bottom: 1.5mm;
+    }
+
+    .name-en {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6.5pt;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 2.5mm;
+    }
+
+    .role-tag {
+      display: inline-block;
+      background: var(--accent);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color: #fff;
+      font-size: 6.5pt;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 1.5mm 3.5mm;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 2.5px;
+      background: rgba(255,255,255,0.09);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border: 0.5pt solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.55);
+      font-size: 6pt;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 1mm 2.5mm;
+      white-space: nowrap;
+      margin-top: 2mm;
+    }
+
+    .status-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #2dd4bf;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .header-summary {
+      color: rgba(255,255,255,0.62);
+      font-size: 7.5pt;
+      line-height: 1.75;
+      border-left: 1.5pt solid var(--accent);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      padding-left: 3mm;
+    }
+
+    /* ════ CONTACT STRIP ═════════════════════════════ */
+    .contact-strip {
+      background: var(--stone-800);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      padding: 2mm 8mm;
+      display: flex;
+      gap: 5mm;
+      flex-wrap: wrap;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 2mm;
+      color: var(--stone-400);
+      font-size: 6.5pt;
+      font-family: 'JetBrains Mono', monospace;
+      text-decoration: none;
+    }
+
+    .contact-item svg { width: 9px; height: 9px; flex-shrink: 0; }
+
+    /* ════ BODY 2단 (table 방식 — PDF 호환 최우선) ═══ */
+    .body-wrap {
+      display: table;
+      width: 100%;
+      flex: 1;
+      table-layout: fixed;
+    }
+
+    .left-col, .right-col {
+      display: table-cell;
+      vertical-align: top;
+    }
+
+    .left-col {
+      width: calc(var(--page-w) - var(--side-w));
+      padding: 5.5mm 5mm 6mm 8mm;
+      border-right: 0.5pt solid var(--stone-200);
+    }
+
+    .right-col {
+      width: var(--side-w);
+      padding: 5.5mm 8mm 6mm 5mm;
+      background: var(--stone-50);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ════ SECTION ════════════════════════════════════ */
+    .section { margin-bottom: 5mm; }
+    .section:last-child { margin-bottom: 0; }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 2mm;
+      margin-bottom: 3mm;
+      break-after: avoid;  /* 섹션 제목만 홀로 페이지 끝에 남지 않도록 */
+    }
+
+    .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 5.5pt;
+      color: var(--accent);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+    }
+
+    .section-label h2 {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 8.5pt;
+      font-weight: 700;
+      color: var(--stone-900);
+      white-space: nowrap;
+    }
+
+    .section-rule {
+      flex: 1;
+      height: 0.5pt;
+      background: var(--stone-200);
+    }
+
+    /* ════ INTRO BLOCKS ══════════════════════════════ */
+    .intro-block {
+      margin-bottom: 2mm;
+      padding: 2.5mm 3mm 2.5mm 2.5mm;
+      border-left: 1.5pt solid var(--stone-200);
+      break-inside: avoid;
+    }
+
+    .intro-title {
+      font-size: 6.5pt;
+      font-weight: 700;
+      color: var(--stone-700);
+      margin-bottom: 1mm;
+    }
+
+    .intro-block p {
+      font-size: 7.5pt;
+      color: var(--stone-600);
+      line-height: 1.7;
+    }
+
+    /* ════ EXPERIENCE ════════════════════════════════ */
+    .exp-item {
+      margin-bottom: 3.5mm;
+      padding-bottom: 3.5mm;
+      border-bottom: 0.5pt solid var(--stone-100);
+      break-inside: avoid;
+    }
+
+    .exp-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .exp-company {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 9pt;
+      font-weight: 700;
+      color: var(--stone-900);
+      margin-bottom: 1mm;
+    }
+
+    .exp-meta {
+      display: flex;
+      align-items: center;
+      gap: 2.5mm;
+      flex-wrap: wrap;
+      margin-bottom: 1.5mm;
+    }
+
+    .exp-role {
+      font-size: 6.5pt;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .exp-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6.5pt;
+      color: var(--stone-400);
+    }
+
+    .exp-duration {
+      font-size: 6pt;
+      color: var(--stone-400);
+      background: var(--stone-100);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      padding: 0.5mm 1.5mm;
+    }
+
+    .exp-desc {
+      font-size: 7pt;
+      color: var(--stone-500);
+      margin-bottom: 1.5mm;
+      line-height: 1.6;
+    }
+
+    .ach-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1mm;
+    }
+
+    .ach-list li {
+      font-size: 7pt;
+      color: var(--stone-600);
+      line-height: 1.65;
+      padding-left: 3mm;
+      position: relative;
+    }
+
+    .ach-list li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: var(--stone-300);
+    }
+
+    /* ════ PROJECTS ══════════════════════════════════ */
+    .proj-item {
+      margin-bottom: 2.5mm;
+      border: 0.5pt solid var(--stone-200);
+      break-inside: avoid;
+    }
+
+    .proj-head {
+      padding: 2mm 3mm;
+      background: var(--stone-50);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border-bottom: 0.5pt solid var(--stone-200);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 2mm;
+    }
+
+    .proj-name {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 8pt;
+      font-weight: 700;
+      color: var(--stone-900);
+    }
+
+    .proj-type { font-size: 6pt; color: var(--stone-500); margin-top: 0.5mm; }
+
+    .proj-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6pt;
+      color: var(--stone-400);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .proj-body { padding: 2mm 3mm; }
+
+    .proj-desc {
+      font-size: 7pt;
+      color: var(--stone-500);
+      margin-bottom: 1.5mm;
+      line-height: 1.65;
+    }
+
+    .tag-row { display: flex; flex-wrap: wrap; gap: 1mm; margin-bottom: 1mm; }
+
+    .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 5.5pt;
+      color: var(--stone-600);
+      background: var(--stone-100);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border: 0.5pt solid var(--stone-200);
+      padding: 0.5mm 1.5mm;
+    }
+
+    .award-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 1.5mm;
+      font-size: 6pt;
+      font-weight: 700;
+      color: #92400e;
+      background: #fef3c7;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border: 0.5pt solid #fde68a;
+      padding: 0.8mm 2mm;
+    }
+
+    /* ════ SIDEBAR — 기술스택 ════════════════════════ */
+    .skill-group { margin-bottom: 3mm; break-inside: avoid; }
+
+    .skill-group-title {
+      font-size: 5.5pt;
+      font-weight: 700;
+      color: var(--stone-400);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5mm;
+    }
+
+    .pill-row { display: flex; flex-wrap: wrap; gap: 1mm; }
+
+    .pill {
+      font-size: 6.5pt;
+      font-weight: 500;
+      color: var(--stone-700);
+      background: #fff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border: 0.5pt solid var(--stone-200);
+      padding: 1mm 2mm;
+    }
+
+    .pill.primary {
+      background: var(--stone-900);
+      color: #fff;
+      border-color: var(--stone-900);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .pill.accent {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ════ SIDEBAR — 구분선·학력·활동 ═══════════════ */
+    .side-rule { height: 0.5pt; background: var(--stone-200); margin: 3.5mm 0; }
+
+    .edu-item, .act-item {
+      padding: 2mm 2.5mm;
+      background: #fff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border: 0.5pt solid var(--stone-200);
+      margin-bottom: 1.5mm;
+      break-inside: avoid;
+    }
+
+    .edu-school {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 7.5pt;
+      font-weight: 700;
+      color: var(--stone-900);
+      margin-bottom: 0.8mm;
+    }
+
+    .edu-detail { font-size: 6.5pt; color: var(--stone-500); line-height: 1.65; }
+
+    .act-title { font-size: 7.5pt; font-weight: 700; color: var(--stone-900); margin-bottom: 0.8mm; }
+
+    .act-year {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 6pt;
+      color: var(--accent);
+      margin-bottom: 1mm;
+    }
+
+    .act-desc { font-size: 6.5pt; color: var(--stone-500); line-height: 1.65; }
+
+    /* ════ SIDEBAR — 경력 요약 카드 ════════════════════ */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5mm;
+    }
+
+    .stat-card {
+      padding: 2.5mm 2mm;
+      background: #fff;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      border: 0.5pt solid var(--stone-200);
+      text-align: center;
+      break-inside: avoid;
+    }
+
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11pt;
+      font-weight: 500;
+      color: var(--stone-900);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .stat-num.accent { color: var(--accent); }
+    .stat-label { font-size: 5.5pt; color: var(--stone-500); margin-top: 1mm; }
+
+    /* ════ @media print ═══════════════════════════════
+       브라우저 인쇄 시 화면용 배경·그림자 제거,
+       @page 여백 0으로 설정해 .page가 A4 전체를 채움
+    ════════════════════════════════════════════════ */
+    @media print {
+      @page { size: A4; margin: 0; }
+
+      body { background: none; }
+
+      .page {
+        margin: 0;
+        box-shadow: none;
+        width: 210mm;
+        min-height: 297mm;
+      }
+    }
+
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ HEADER ══════════════════════════════════════ -->
+  <header class="page-header">
+    <div class="header-top-row">
+      <div>
+        <h1 class="name">김지훈</h1>
+        <span class="name-en">Kim Ji-hoon</span>
+        <div class="role-tag">Frontend Developer</div>
+      </div>
+      <span class="status-badge">
+        <span class="status-dot"></span>재직 중
+      </span>
+    </div>
+    <p class="header-summary">
+      높은 사용자 경험을 제공하면서도 안정적인 제품을 개발하는 것에 가치를 두고, 타 직군과 꾸준히 소통하며
+      함께 제품을 만들어가는 것에 관심이 많습니다. 10년 이상 SaaS/웹 프로덕트 분야에서 습득한 도메인
+      지식을 바탕으로 완성도 높은 디자인 시스템 구축을 통해 제품의 인터페이스를 개선하고 유지보수 효율을
+      향상시킨 경험이 있으며, 현재는 풀필먼트 ERP 제품을 개발하고 있습니다.
+    </p>
+  </header>
+
+  <!-- ── Contact strip ─────────────────────────────── -->
+  <div class="contact-strip">
+    <a href="mailto:lanslot84@gmail.com" class="contact-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 8.5 6a2 2 0 0 0 3 0L22 7"/>
+      </svg>
+      lanslot84@gmail.com
+    </a>
+    <span class="contact-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+      </svg>
+      GitHub
+    </span>
+    <span class="contact-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+      개발 블로그
+    </span>
+    <span class="contact-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+      </svg>
+      포트폴리오
+    </span>
+  </div>
+
+  <!-- ══ BODY: 2단 컬럼 (table 방식) ════════════════════ -->
+  <div class="body-wrap">
+
+    <!-- ─── 왼쪽: 자기소개 / 경력 / 프로젝트 ──────── -->
+    <main class="left-col">
+
+      <!-- 자기소개 -->
+      <section class="section">
+        <div class="section-label">
+          <span class="section-num">01</span>
+          <h2>자기소개</h2>
+          <div class="section-rule"></div>
+        </div>
+        <div class="intro-block">
+          <div class="intro-title">▸ 실증적인 경험을 바탕으로 빠른 성장 지향</div>
+          <p>ERP 제품의 UI 디자인 작업과 스토리북을 활용한 디자인 시스템 구축을 모두 담당하여 디자인 리뉴얼 개발을 빠르게 주도한 경험이 있습니다. 부트캠프에서의 팀·개인 프로젝트를 통해 백엔드와 프론트엔드 역할을 모두 경험해 개발 프로세스 전반에 대한 이해도를 높였습니다.</p>
+        </div>
+        <div class="intro-block">
+          <div class="intro-title">▸ SaaS 분야의 넓고 깊은 도메인 지식 보유</div>
+          <p>복잡한 Workflow를 이해하기 쉽게 설계하고 기획·디자인하면서 얻은 인사이트를 바탕으로, 정해진 산출물 없이도 요구사항 기반으로 빠르게 스펙을 도출해 화면 설계와 개발을 진행할 수 있습니다.</p>
+        </div>
+        <div class="intro-block">
+          <div class="intro-title">▸ 요구사항 분석·일정 관리·문서화에 강점</div>
+          <p>복잡한 비즈니스 로직을 빠르게 분석하고 태스크 단위로 나눠 스프린트 미팅 없이도 개발 일정을 준수합니다. 아이데이션 문서, 포스트맨 API 명세, 소셜 로그인 플로우차트 등 문서화·도식화 작업을 주도한 경험이 있습니다.</p>
+        </div>
+      </section>
+
+      <!-- 경력 -->
+      <section class="section">
+        <div class="section-label">
+          <span class="section-num">02</span>
+          <h2>경력</h2>
+          <div class="section-rule"></div>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-company">주식회사 물류대장</div>
+          <div class="exp-meta">
+            <span class="exp-role">Frontend Developer</span>
+            <span class="exp-period">2024.07 — 재직 중</span>
+            <span class="exp-duration">1년 8개월</span>
+          </div>
+          <p class="exp-desc">Home-in Fullfillment System ERP 제품의 프론트엔드 개발 담당</p>
+          <ul class="ach-list">
+            <li>스토리북·피그마 기반 자체 디자인 시스템(Logimate Design System, LDS) 구축 및 제품 유지보수·운영</li>
+            <li>컴포넌트와 로직을 분리한 디자인 시스템 컴포넌트 제작 — 관심사 분리 원칙 적용</li>
+            <li>레거시 JavaScript 코드를 TypeScript로 점진적 마이그레이션</li>
+            <li>입력 데이터 변환 정규표현식·함수 공통화로 업무 효율 증대</li>
+            <li>클라이언트 사이드 데이터 필터링 공통 커스텀훅 개발 → 작업 시간 단축 및 레거시 코드 리팩토링</li>
+            <li>LLM / Cursor 활용 랜딩페이지 개편 및 CS 등록·관리 모듈 개발로 팀 생산성 향상</li>
+            <li>Claude Code를 활용한 반복 작업 자동화 프로세스 구축</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-company">주식회사 미리디</div>
+          <div class="exp-meta">
+            <span class="exp-role">Product Designer</span>
+            <span class="exp-period">2022.02 — 2023.07</span>
+            <span class="exp-duration">1년 6개월</span>
+          </div>
+          <p class="exp-desc">웹 기반 디자인툴 미리캔버스의 프로덕트 디자인 담당</p>
+          <ul class="ach-list">
+            <li>구독 요금제 도입을 위한 정책 작성·화면 기획·UXUI 디자인 진행 — SaaS 수익 모델 구축에 기여</li>
+            <li>글로벌 버전 출시를 위한 I18N 작업 및 워드프레스 블로그 개발</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-company">(주)토스랩</div>
+          <div class="exp-meta">
+            <span class="exp-role">UI/UX Designer</span>
+            <span class="exp-period">2015.08 — 2019.08</span>
+            <span class="exp-duration">4년 1개월</span>
+          </div>
+          <p class="exp-desc">웹 기반 협업툴 잔디(JANDI) 웹 프로덕트(SPA) 디자인 담당</p>
+          <ul class="ach-list">
+            <li>디자인 산출물을 직접 HTML·SCSS로 작성하고 GitHub를 통해 프로덕션 코드 유지보수 — 빠른 검수 달성</li>
+            <li>Web/Motion 프로토타입 제작으로 빠른 의사결정 및 사용자 경험 고도화에 기여</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-company">(주)휴맥스</div>
+          <div class="exp-meta">
+            <span class="exp-role">GUI / Motion Designer</span>
+            <span class="exp-period">2011.04 — 2013.03</span>
+            <span class="exp-duration">2년</span>
+          </div>
+          <ul class="ach-list">
+            <li>Next UX 디자인 컨셉 구축 프로젝트 참여 — Screen Design·Motion Design·Flash Prototype 제작</li>
+            <li>Set-top box CSS UI animation 구현 검토를 통한 최소 스펙 도출 및 적용</li>
+          </ul>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-company">(주)닐얼라이언스</div>
+          <div class="exp-meta">
+            <span class="exp-role">Flash Developer</span>
+            <span class="exp-period">2009.06 — 2011.04</span>
+            <span class="exp-duration">1년 11개월</span>
+          </div>
+          <ul class="ach-list">
+            <li>디지털 디자인 에이전시에서 삼성·LG·Hyundai 클라이언트 선행과제 진행</li>
+            <li>ActionScript Flash Animation·Motion 작업으로 컨셉 구현 및 고도화에 기여</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 주요 프로젝트 -->
+      <section class="section">
+        <div class="section-label">
+          <span class="section-num">03</span>
+          <h2>주요 프로젝트</h2>
+          <div class="section-rule"></div>
+        </div>
+
+        <div class="proj-item">
+          <div class="proj-head">
+            <div>
+              <div class="proj-name">로지메이트 ERP</div>
+              <div class="proj-type">주식회사 물류대장 — 업무 프로젝트</div>
+            </div>
+            <div class="proj-period">2024.07 — 진행 중</div>
+          </div>
+          <div class="proj-body">
+            <p class="proj-desc">택배·주문·재고 관리 등 물류 운영을 위한 Fullfillment ERP 웹 서비스. 디자인 리뉴얼 시안 작업 및 스토리북 기반 자체 디자인 시스템 구축·점진적 적용, LLM 활용 랜딩페이지 개편 및 CS 처리 모듈 개발.</p>
+            <div class="tag-row">
+              <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Storybook</span><span class="tag">Figma</span><span class="tag">Redux Toolkit</span><span class="tag">Cursor</span><span class="tag">Claude Code</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proj-item">
+          <div class="proj-head">
+            <div>
+              <div class="proj-name">가계부를 부탁해!</div>
+              <div class="proj-type">개인 프로젝트</div>
+            </div>
+            <div class="proj-period">2024.01 — 2024.03</div>
+          </div>
+          <div class="proj-body">
+            <p class="proj-desc">그룹 단위 지출·자산 관리 웹 서비스. Tanstack-query 무한 스크롤, React Portal 공통 UI, 반응형 UX, vitest·msw 테스트 코드 작성.</p>
+            <div class="tag-row">
+              <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">MongoDB</span><span class="tag">Vite</span><span class="tag">styled-components</span><span class="tag">Recoil</span><span class="tag">Tanstack Query</span><span class="tag">JWT</span><span class="tag">vitest</span><span class="tag">msw</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="proj-item">
+          <div class="proj-head">
+            <div>
+              <div class="proj-name">스페이스테이션</div>
+              <div class="proj-type">팀 프로젝트 6인 — 엘리스트랙 2차</div>
+            </div>
+            <div class="proj-period">2023</div>
+          </div>
+          <div class="proj-body">
+            <p class="proj-desc">공간 사진을 공유하는 웹 SNS. 카카오 소셜 로그인, 이미지 태깅, URL 미리보기, 공통 모달·액션시트 UI 개발.</p>
+            <div class="tag-row">
+              <span class="tag">JavaScript</span><span class="tag">TypeScript</span><span class="tag">React</span><span class="tag">MongoDB</span><span class="tag">Node.js</span><span class="tag">Express.js</span><span class="tag">JWT</span>
+            </div>
+            <span class="award-badge">🏆 대상 수상</span>
+          </div>
+        </div>
+
+        <div class="proj-item">
+          <div class="proj-head">
+            <div>
+              <div class="proj-name">Elice Motors</div>
+              <div class="proj-type">팀 프로젝트 6인 — 엘리스트랙 1차</div>
+            </div>
+            <div class="proj-period">2023</div>
+          </div>
+          <div class="proj-body">
+            <p class="proj-desc">자동차 온라인 비교·구매 컨셉 웹 서비스. 서버 사이드 API 로직 개발, 포스트맨 API 명세 작성, GCP VM 서버 배포 담당.</p>
+            <div class="tag-row">
+              <span class="tag">JavaScript</span><span class="tag">Node.js</span><span class="tag">MongoDB Atlas</span><span class="tag">Express.js</span><span class="tag">Nginx</span><span class="tag">JWT</span><span class="tag">GCP</span><span class="tag">pm2</span>
+            </div>
+            <span class="award-badge">🥇 우수 프로젝트 수상</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ─── 오른쪽: 기술스택 / 학력 / 활동 / 요약 ─── -->
+    <aside class="right-col">
+
+      <!-- 기술 스택 -->
+      <section class="section">
+        <div class="section-label">
+          <span class="section-num">A</span>
+          <h2>기술 스택</h2>
+          <div class="section-rule"></div>
+        </div>
+
+        <div class="skill-group">
+          <div class="skill-group-title">Core</div>
+          <div class="pill-row">
+            <span class="pill primary">JavaScript</span>
+            <span class="pill primary">TypeScript</span>
+            <span class="pill primary">React</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">State / Data</div>
+          <div class="pill-row">
+            <span class="pill">Redux</span>
+            <span class="pill">Redux Toolkit</span>
+            <span class="pill">Recoil</span>
+            <span class="pill">Tanstack Query</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Styling / System</div>
+          <div class="pill-row">
+            <span class="pill">styled-components</span>
+            <span class="pill">Storybook</span>
+            <span class="pill">Figma</span>
+            <span class="pill">HTML/CSS</span>
+            <span class="pill">SCSS</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Backend / Infra</div>
+          <div class="pill-row">
+            <span class="pill">Node.js</span>
+            <span class="pill">Express.js</span>
+            <span class="pill">MongoDB</span>
+            <span class="pill">JWT</span>
+            <span class="pill">GCP</span>
+            <span class="pill">Nginx</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Framework / Test</div>
+          <div class="pill-row">
+            <span class="pill">Next.js</span>
+            <span class="pill">Vite</span>
+            <span class="pill">vitest</span>
+            <span class="pill">msw</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">AI Tools</div>
+          <div class="pill-row">
+            <span class="pill accent">Claude Code</span>
+            <span class="pill accent">Cursor</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="side-rule"></div>
+
+      <!-- 학력 -->
+      <section class="section">
+        <div class="section-label">
+          <span class="section-num">B</span>
+          <h2>학력</h2>
+          <div class="section-rule"></div>
+        </div>
+        <div class="edu-item">
+          <div class="edu-school">한양대학교 ERICA</div>
+          <div class="edu-detail">
+            영상디자인학과 학사<br />
+            2003.03 — 2010.02 졸업<br />
+            <span style="font-family:'JetBrains Mono',monospace;font-size:6pt;color:var(--stone-400);">GPA 3.21 / 4.5</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="side-rule"></div>
+
+      <!-- 대외활동 -->
+      <section class="section">
+        <div class="section-label">
+          <span class="section-num">C</span>
+          <h2>대외활동</h2>
+          <div class="section-rule"></div>
+        </div>
+        <div class="act-item">
+          <div class="act-title">엘리스트랙 SW 엔지니어 트랙 7기</div>
+          <div class="act-year">2023</div>
+          <div class="act-desc">HTML, CSS, JS, TS, Node.js, MongoDB, React 강의 수강. 3개의 구현 스터디 및 2건의 팀 프로젝트 진행. 대상·우수상 수상.</div>
+        </div>
+      </section>
+
+      <div class="side-rule"></div>
+
+      <!-- 경력 요약 -->
+      <section class="section">
+        <div class="section-label">
+          <span class="section-num">D</span>
+          <h2>경력 요약</h2>
+          <div class="section-rule"></div>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-num">10<span style="font-size:7pt">+</span></div>
+            <div class="stat-label">년 디자인 경력</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num accent">2<span style="font-size:7pt">+</span></div>
+            <div class="stat-label">년 개발 경력</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">5</div>
+            <div class="stat-label">개 회사 경력</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num accent">2</div>
+            <div class="stat-label">건 프로젝트 수상</div>
+          </div>
+        </div>
+      </section>
+
+    </aside>
+  </div><!-- /body-wrap -->
+
+</div><!-- /page -->
+</body>
+</html>

@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>김지훈 - Resume</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --muted: #6f6f76;
+      --line: #e8e8ed;
+      --soft: #f6f6f8;
+      --soft-2: #fbfbfc;
+      --accent: #111111;
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --shadow: 0 18px 48px rgba(17,17,17,0.06);
+      --container: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      font-family: Inter, Pretendard, "Noto Sans KR", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      word-break: keep-all;
+    }
+
+    a { color: inherit; }
+
+    .page {
+      width: 100%;
+      background: #fff;
+      padding: 42px 0 80px;
+    }
+
+    .container {
+      width: min(calc(100% - 48px), var(--container));
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 28px;
+    }
+
+    .panel {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-main {
+      padding: 40px 40px 34px;
+      min-height: 320px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(245,245,248,0.95) 0 120px, transparent 121px),
+        linear-gradient(180deg, #ffffff 0%, #fcfcfd 100%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #111;
+      display: inline-block;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 6vw, 76px);
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      font-weight: 500;
+    }
+
+    .role {
+      margin-top: 14px;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    .summary {
+      margin-top: 22px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 11px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--text);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .hero-side {
+      padding: 28px;
+      display: grid;
+      gap: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #fafafb 100%);
+    }
+
+    .contact-card, .metric-card {
+      padding: 18px;
+      background: var(--soft-2);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+    }
+
+    .contact-card small, .metric-card small {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .contact-card strong, .metric-card strong {
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .section-card {
+      padding: 24px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .side-title, .main-title {
+      margin: 0 0 16px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .profile-list, .link-list, .skill-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .profile-item strong,
+    .link-list a,
+    .skill-list span {
+      display: block;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .profile-item small,
+    .link-list small,
+    .skill-group small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .skill-group + .skill-group {
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .stack-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .stack-pills span {
+      display: inline-flex;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .main {
+      display: grid;
+      gap: 24px;
+    }
+
+    .main-section {
+      padding: 28px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .main-title {
+      margin-bottom: 18px;
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .intro-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--soft-2);
+    }
+
+    .intro-card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: -0.03em;
+    }
+
+    .intro-card p {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .timeline {
+      display: grid;
+      gap: 18px;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 170px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .timeline-item:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .timeline-date {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .timeline-content h3 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+    }
+
+    .timeline-content .meta {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .timeline-content p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .timeline-content ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+      color: var(--text);
+    }
+
+    .timeline-content li {
+      margin-top: 8px;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    .project-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .project-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, #fff 0%, #fbfbfc 100%);
+    }
+
+    .project-card h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      letter-spacing: -0.04em;
+    }
+
+    .project-card .meta {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .project-card p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .project-card ul {
+      margin: 14px 0 0;
+      padding-left: 18px;
+    }
+
+    .project-card li {
+      margin-top: 8px;
+      font-size: 15px;
+    }
+
+    .education-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .education-item {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--soft-2);
+    }
+
+    .education-item h3 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .education-item p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .layout,
+      .intro-grid,
+      .timeline-item {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+
+      .page {
+        padding: 0;
+      }
+
+      .panel,
+      .main-section,
+      .section-card {
+        box-shadow: none;
+      }
+
+      .main-section,
+      .section-card,
+      .hero-main,
+      .hero-side,
+      .project-card,
+      .education-item,
+      .intro-card,
+      .contact-card,
+      .metric-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="container">
+      <section class="hero">
+        <div class="panel hero-main">
+          <div class="eyebrow">Resume / Frontend Developer</div>
+          <h1>김지훈</h1>
+          <div class="role">프론트엔드 개발자</div>
+          <p class="summary">
+            높은 사용자 경험과 안정적인 제품 개발을 함께 추구합니다. 10년 이상 SaaS/웹 프로덕트 분야에서 쌓은 도메인 지식과
+            디자인 시스템 경험을 바탕으로, 현재는 풀필먼트 ERP 제품의 프론트엔드 개발을 담당하고 있습니다.
+          </p>
+          <div class="hero-actions">
+            <a class="chip" href="mailto:lanslot84@gmail.com">lanslot84@gmail.com</a>
+            <span class="chip">SaaS / B2B / ERP</span>
+            <span class="chip">React · TypeScript · Next.js</span>
+          </div>
+        </div>
+        <aside class="panel hero-side">
+          <div class="contact-card">
+            <small>Email</small>
+            <strong>lanslot84@gmail.com</strong>
+          </div>
+          <div class="contact-card">
+            <small>Focus</small>
+            <strong>Frontend Engineering<br/>Design Systems<br/>Product UX</strong>
+          </div>
+          <div class="metric-card">
+            <small>Experience</small>
+            <strong>디자인 10년+<br/>프론트엔드 개발 실무 진행 중</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="layout">
+        <aside class="sidebar">
+          <div class="section-card">
+            <h2 class="side-title">Profile</h2>
+            <div class="profile-list">
+              <div class="profile-item">
+                <small>Name</small>
+                <strong>김지훈</strong>
+              </div>
+              <div class="profile-item">
+                <small>Role</small>
+                <strong>Frontend Developer</strong>
+              </div>
+              <div class="profile-item">
+                <small>Current Company</small>
+                <strong>주식회사물류대장</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="side-title">Tech Stack</h2>
+            <div class="skill-list">
+              <div class="skill-group">
+                <small>Core</small>
+                <div class="stack-pills">
+                  <span>JavaScript</span>
+                  <span>TypeScript</span>
+                  <span>React</span>
+                  <span>Next.js</span>
+                  <span>Redux</span>
+                  <span>Redux Toolkit</span>
+                </div>
+              </div>
+              <div class="skill-group">
+                <small>Backend / Infra</small>
+                <div class="stack-pills">
+                  <span>Node.js</span>
+                  <span>Express.js</span>
+                  <span>MongoDB</span>
+                  <span>JWT</span>
+                  <span>Google Cloud Platform</span>
+                </div>
+              </div>
+              <div class="skill-group">
+                <small>Test / Tools</small>
+                <div class="stack-pills">
+                  <span>Vitest</span>
+                  <span>Storybook</span>
+                  <span>Figma</span>
+                  <span>Cursor</span>
+                  <span>Claude Code</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-card">
+            <h2 class="side-title">Links</h2>
+            <div class="link-list">
+              <a href="#">포트폴리오 URL</a>
+              <a href="#">GitHub</a>
+              <a href="#">개발 블로그</a>
+            </div>
+          </div>
+        </aside>
+
+        <main class="main">
+          <section class="main-section">
+            <h2 class="main-title">Summary</h2>
+            <div class="intro-grid">
+              <article class="intro-card">
+                <h3>실증적인 경험을 바탕으로 빠른 성장을 지향</h3>
+                <p>
+                  운영 중인 ERP 제품의 UI 디자인과 스토리북 기반 디자인 시스템 구축을 모두 맡아, 제품 리뉴얼 개발을 빠르게 주도했습니다.
+                </p>
+              </article>
+              <article class="intro-card">
+                <h3>SaaS 분야의 넓고 깊은 도메인 지식</h3>
+                <p>
+                  복잡한 워크플로우를 이해하기 쉽게 구조화하고, PM 및 타 직군과 적극적으로 논의하며 더 나은 구현 방식을 제안합니다.
+                </p>
+              </article>
+              <article class="intro-card">
+                <h3>요구사항 분석과 문서화에 강점</h3>
+                <p>
+                  비즈니스 로직을 빠르게 분석하고 태스크 단위로 구조화하여, 일정 관리와 협업 효율을 높이는 데 강점을 가지고 있습니다.
+                </p>
+              </article>
+            </div>
+          </section>
+
+          <section class="main-section">
+            <h2 class="main-title">Experience</h2>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-date">2024.07. ~ 재직 중</div>
+                <div class="timeline-content">
+                  <h3>주식회사물류대장</h3>
+                  <div class="meta">프론트엔드 개발 · 개발팀</div>
+                  <p>Home-in Fullfillment System ERP 제품의 프론트엔드 개발을 담당하고 있습니다.</p>
+                  <ul>
+                    <li>스토리북과 피그마를 활용한 자체 디자인 시스템(Logimate Design System) 구축 및 운영</li>
+                    <li>컴포넌트와 로직을 분리한 구조로 관심사 분리를 적용하고, 레거시 JavaScript 코드를 TypeScript로 점진적 마이그레이션</li>
+                    <li>입력 데이터 변환 함수와 정규표현식을 공통화하여 업무 효율 향상</li>
+                    <li>LLM, Cursor, Claude Code를 활용한 랜딩페이지 개편과 반복작업 자동화 프로세스 구축</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-date">2022.02. ~ 2023.07.</div>
+                <div class="timeline-content">
+                  <h3>주식회사 미리디</h3>
+                  <div class="meta">프로덕트 디자이너 · 플랫폼 개발팀</div>
+                  <p>
+                    웹 기반 디자인툴 미리캔버스의 프로덕트 디자인을 담당하며, 구독 요금제 도입 정책 수립과 화면 기획 및 UX/UI 디자인을 진행했습니다.
+                  </p>
+                  <ul>
+                    <li>SaaS 형태의 수익 모델 구축 기여</li>
+                    <li>글로벌 버전 출시를 위한 I18N 작업 참여</li>
+                    <li>워드프레스 블로그 개발 작업 진행</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-date">2015.08. ~ 2019.08.</div>
+                <div class="timeline-content">
+                  <h3>(주)토스랩</h3>
+                  <div class="meta">UI/UX 디자이너 · UX팀</div>
+                  <p>
+                    웹 기반 협업툴 잔디의 웹 프로덕트 디자인을 담당했고, 디자인 산출물을 직접 HTML과 SCSS로 작성하며 프로덕션 코드 유지보수에 참여했습니다.
+                  </p>
+                  <ul>
+                    <li>디자인 검수 속도 향상과 사용자 경험 고도화에 기여</li>
+                    <li>Web/Motion 프로토타입 제작을 통해 빠른 의사 결정 지원</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-date">2011.04. ~ 2013.03.</div>
+                <div class="timeline-content">
+                  <h3>(주)휴맥스</h3>
+                  <div class="meta">GUI / 모션 디자이너 · UX팀</div>
+                  <p>
+                    Next UX 디자인 컨셉 구축 프로젝트에 참여하여 Screen Design, Wireframe, Motion Design, Flash Prototype 제작을 수행했습니다.
+                  </p>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-date">2009.06. ~ 2011.04.</div>
+                <div class="timeline-content">
+                  <h3>(주)닐얼라이언스</h3>
+                  <div class="meta">플래시 개발자 · UX팀</div>
+                  <p>
+                    디지털 디자인 에이전시에서 삼성, LG, Hyundai 등 다양한 클라이언트 선행 과제를 진행하며 ActionScript 기반 Flash Animation과 Motion 작업을 수행했습니다.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="main-section">
+            <h2 class="main-title">Projects</h2>
+            <div class="project-grid">
+              <article class="project-card">
+                <h3>로지메이트 ERP</h3>
+                <div class="meta">주식회사물류대장 · 2024.07. ~ 진행 중</div>
+                <p>택배, 주문, 재고 관리 등 물류 운영을 위한 Fullfillment 기능을 제공하는 ERP 웹 서비스</p>
+                <ul>
+                  <li>웹 서비스 디자인 리뉴얼 시안 작업 및 스토리북 기반 자체 디자인 시스템 구축</li>
+                  <li>클라이언트 사이드 데이터 필터링 공통 커스텀 훅 개발로 작업 시간 단축 및 레거시 코드 리팩토링</li>
+                  <li>LLM과 Cursor를 활용한 랜딩페이지 개편 및 내부 CS 인입 처리 모듈 개발</li>
+                </ul>
+              </article>
+
+              <article class="project-card">
+                <h3>가계부를 부탁해!</h3>
+                <div class="meta">개인 프로젝트 · 2024.01. ~ 2024.03.</div>
+                <p>그룹 단위의 지출 및 자산 관리를 할 수 있는 웹 서비스</p>
+                <ul>
+                  <li>API 및 데이터 스키마 설계</li>
+                  <li>TanStack Query 기반 무한 스크롤 및 데이터 상태 관리 구현</li>
+                  <li>React Portal을 활용한 재사용 가능한 Dropdown / Modal UI 구현</li>
+                  <li>모바일 환경까지 고려한 반응형 UX 구성</li>
+                  <li>Vitest와 MSW를 활용한 테스트 코드 작성</li>
+                </ul>
+              </article>
+
+              <article class="project-card">
+                <h3>엘리스트랙 SW 엔지니어 트랙 프로젝트</h3>
+                <div class="meta">2023</div>
+                <p>HTML, CSS, JavaScript, TypeScript, Node.js, MongoDB, React 기반 교육 과정과 팀 프로젝트 수행</p>
+                <ul>
+                  <li>Elice Motors: 사용자/관리자 인증 관련 서버 사이드 API 로직 개발 및 GCP VM 배포 담당</li>
+                  <li>스페이스테이션: 카카오 API 기반 소셜 로그인, 장소 검색, 태깅 및 공통 UI 개발</li>
+                </ul>
+              </article>
+            </div>
+          </section>
+
+          <section class="main-section">
+            <h2 class="main-title">Education & Activity</h2>
+            <div class="education-list">
+              <div class="education-item">
+                <h3>한양대학교 ERICA</h3>
+                <p>영상디자인 학사 · 2003.03. ~ 2010.02. · 졸업 (학점 3.21/4.5)</p>
+              </div>
+              <div class="education-item">
+                <h3>엘리스트랙 SW 엔지니어 트랙 7기</h3>
+                <p>2023 · React, TypeScript, Node.js, MongoDB 기반 강의 수강 및 팀 프로젝트 진행</p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
