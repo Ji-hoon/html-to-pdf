@@ -13,7 +13,7 @@
         --strong-line: #141414;
         --soft: #f7f7f9;
         --container: 1120px;
-        --section-gap: 48px;
+        --section-gap: 40px;
       }
 
       * {
@@ -49,7 +49,7 @@
       .page {
         width: 100%;
         background: #fff;
-        padding: 48px 0 88px;
+        padding: 48px 0;
       }
 
       .container {
@@ -59,8 +59,8 @@
 
       .hero {
         padding-bottom: 34px;
-        border-bottom: 1px solid var(--line);
-        margin-bottom: 40px;
+        /* border-bottom: 1px solid var(--line);
+        margin-bottom: 40px; */
       }
 
       .eyebrow {
@@ -132,7 +132,7 @@
       .layout {
         display: grid;
         grid-template-columns: 280px minmax(0, 1fr);
-        gap: 52px;
+        /* gap: 24px; */
         align-items: start;
       }
 
@@ -163,16 +163,24 @@
         width: 100%;
         height: 4px;
         margin-top: 12px;
-        background: linear-gradient(
-          90deg,
-          var(--strong-line) 0 132px,
-          var(--line) 132px 100%
-        );
+        display: flex;
+      }
+
+      .section-bar .bar-strong {
+        height: 4px;
+        background: var(--strong-line);
+        flex-shrink: 0;
+      }
+
+      .section-bar .bar-light {
+        height: 4px;
+        background: var(--line);
+        flex: 1;
       }
 
       .sidebar-block {
         display: grid;
-        gap: 14px;
+        gap: 4px;
       }
 
       .kv {
@@ -340,8 +348,14 @@
         padding-top: 0;
       }
 
-      @media (max-width: 600px) {
-        .hero-grid,
+      .project-item:last-child,
+      .timeline-item:last-child,
+      .education-item:last-child {
+        border-bottom-width: 0;
+      }
+
+      @media (max-width: 1800px) {
+        /* .hero-grid, */
         .layout,
         .summary-grid,
         .timeline-item {
@@ -353,13 +367,29 @@
         }
       }
 
+      @page {
+        margin: 48px 0;
+        @top-left { content: ""; }
+        @top-center { content: ""; }
+        @top-right { content: ""; }
+        @bottom-left { content: ""; }
+        @bottom-center { content: ""; }
+        @bottom-right { content: ""; }
+      }
+
       @media print {
         .page {
           padding: 0;
         }
 
+        .bar-strong,
+        .bar-light,
+        .stack-list span::before {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+
         .hero,
-        .section,
         .timeline-item,
         .project-item,
         .education-item,
@@ -410,10 +440,10 @@
 
         <div class="layout">
           <aside class="sidebar">
-            <section class="section">
+            <!-- <section class="section">
               <div class="section-header">
                 <h2 class="section-title">Profile</h2>
-                <div class="section-bar"></div>
+                <div class="section-bar"><div class="bar-strong"></div><div class="bar-light"></div></div>
               </div>
               <div class="sidebar-block">
                 <div class="kv">
@@ -429,12 +459,15 @@
                   <strong>주식회사물류대장</strong>
                 </div>
               </div>
-            </section>
+            </section> -->
 
             <section class="section">
               <div class="section-header">
                 <h2 class="section-title">Tech Stack</h2>
-                <div class="section-bar"></div>
+                <div class="section-bar">
+                  <div class="bar-strong"></div>
+                  <div class="bar-light"></div>
+                </div>
               </div>
               <div class="sidebar-block">
                 <div class="skill-group">
@@ -471,10 +504,10 @@
               </div>
             </section>
 
-            <section class="section">
+            <!-- <section class="section">
               <div class="section-header">
                 <h2 class="section-title">Links</h2>
-                <div class="section-bar"></div>
+                <div class="section-bar"><div class="bar-strong"></div><div class="bar-light"></div></div>
               </div>
               <div class="sidebar-block">
                 <div class="kv">
@@ -490,14 +523,17 @@
                   <a href="#">개발 블로그</a>
                 </div>
               </div>
-            </section>
+            </section> -->
           </aside>
 
           <main class="main">
             <section class="section">
               <div class="section-header">
                 <h2 class="section-title">Summary</h2>
-                <div class="section-bar"></div>
+                <div class="section-bar">
+                  <div class="bar-strong"></div>
+                  <div class="bar-light"></div>
+                </div>
               </div>
               <div class="summary-grid">
                 <article class="summary-item">
@@ -527,7 +563,10 @@
             <section class="section">
               <div class="section-header">
                 <h2 class="section-title">Experience</h2>
-                <div class="section-bar"></div>
+                <div class="section-bar">
+                  <div class="bar-strong"></div>
+                  <div class="bar-light"></div>
+                </div>
               </div>
               <div class="timeline">
                 <div class="timeline-item">
@@ -619,7 +658,10 @@
             <section class="section">
               <div class="section-header">
                 <h2 class="section-title">Projects</h2>
-                <div class="section-bar"></div>
+                <div class="section-bar">
+                  <div class="bar-strong"></div>
+                  <div class="bar-light"></div>
+                </div>
               </div>
               <div class="project-list">
                 <article class="project-item">
@@ -677,7 +719,10 @@
             <section class="section">
               <div class="section-header">
                 <h2 class="section-title">Education & Activity</h2>
-                <div class="section-bar"></div>
+                <div class="section-bar">
+                  <div class="bar-strong"></div>
+                  <div class="bar-light"></div>
+                </div>
               </div>
               <div class="education-list">
                 <div class="education-item">
@@ -695,9 +740,53 @@
                 </div>
               </div>
             </section>
+
+            <section class="section">
+              <div class="section-header">
+                <h2 class="section-title">Links</h2>
+                <div class="section-bar">
+                  <div class="bar-strong"></div>
+                  <div class="bar-light"></div>
+                </div>
+              </div>
+              <div class="sidebar-block">
+                <div class="kv">
+                  <small>Portfolio</small>
+                  <a href="#">포트폴리오 URL</a>
+                </div>
+                <div class="kv">
+                  <small>GitHub</small>
+                  <a href="#">GitHub</a>
+                </div>
+                <div class="kv">
+                  <small>Blog</small>
+                  <a href="#">개발 블로그</a>
+                </div>
+              </div>
+            </section>
           </main>
         </div>
       </div>
     </div>
+    <script>
+      function updateBarWidths() {
+        document.querySelectorAll(".section-header").forEach(function (header) {
+          var title = header.querySelector(".section-title");
+          var barStrong = header.querySelector(".bar-strong");
+          if (title && barStrong) {
+            var textNode = title.firstChild;
+            if (textNode) {
+              var range = document.createRange();
+              range.selectNode(textNode);
+              barStrong.style.width =
+                range.getBoundingClientRect().width + "px";
+            }
+          }
+        });
+      }
+
+      updateBarWidths();
+      window.addEventListener("beforeprint", updateBarWidths);
+    </script>
   </body>
 </html>
