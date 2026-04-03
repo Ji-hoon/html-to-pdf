@@ -8,6 +8,7 @@
       :root {
         --bg: #ffffff;
         --text: #111111;
+        --desc: #484848;
         --muted: #666a73;
         --line: #e9e9ee;
         --strong-line: #141414;
@@ -49,7 +50,7 @@
       .page {
         width: 100%;
         background: #fff;
-        padding: 48px 0;
+        padding: 48px 16px;
       }
 
       .container {
@@ -64,19 +65,24 @@
       }
 
       .eyebrow {
-        display: inline-block;
+        display: flex;
         font-size: 12px;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--muted);
         font-weight: 700;
         margin-bottom: 18px;
+        justify-content: space-between;
+      }
+
+      .eyebrow span:last-child {
+        opacity: 0;
       }
 
       .hero-grid {
         display: grid;
-        grid-template-columns: minmax(0, 1.2fr) 320px;
-        gap: 36px;
+        grid-template-columns: minmax(0, 1.2fr) 280px;
+        gap: 24px;
         align-items: end;
       }
 
@@ -96,10 +102,17 @@
       }
 
       .summary {
-        margin: 20px 0 0;
+        margin: 0;
         max-width: 760px;
         font-size: 16px;
-        color: var(--muted);
+        color: var(--desc);
+        grid-column: 1 / 3;
+      }
+
+      .summary span {
+        word-break: keep-all;
+        display: inline-block;
+        width: 100%;
       }
 
       .hero-meta {
@@ -113,6 +126,11 @@
         border-bottom: 1px solid var(--line);
       }
 
+      .meta-row:last-child {
+        border-bottom-width: 0;
+        padding-bottom: 0;
+      }
+
       .meta-row small {
         display: block;
         margin-bottom: 6px;
@@ -123,15 +141,29 @@
         font-weight: 700;
       }
 
-      .meta-row strong {
+      .meta-row strong,
+      .meta-row a {
         font-size: 15px;
         line-height: 1.5;
         font-weight: 600;
       }
 
+      .meta-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 10px;
+      }
+
+      .meta-links a + a::before {
+        content: "•";
+        margin-right: 10px;
+        color: var(--muted);
+        font-weight: 400;
+      }
+
       .layout {
         display: grid;
-        grid-template-columns: 280px minmax(0, 1fr);
+        grid-template-columns: 300px minmax(0, 1fr);
         /* gap: 24px; */
         align-items: start;
       }
@@ -145,6 +177,10 @@
 
       .section {
         margin-bottom: var(--section-gap);
+      }
+
+      .section.break {
+        page-break-before: always;
       }
 
       .section-header {
@@ -235,8 +271,8 @@
       .stack-list span::before {
         content: "";
         position: absolute;
-        left: 0;
-        top: 0.68em;
+        left: 1px;
+        top: 0.8em;
         width: 4px;
         height: 4px;
         border-radius: 50%;
@@ -269,7 +305,7 @@
       .summary-item p {
         margin: 0;
         font-size: 14px;
-        color: var(--muted);
+        color: var(--desc);
       }
 
       .timeline {
@@ -280,7 +316,7 @@
       .timeline-item {
         display: grid;
         grid-template-columns: 170px minmax(0, 1fr);
-        gap: 22px;
+        gap: 14px;
         padding: 22px 0;
         border-bottom: 1px solid var(--line);
       }
@@ -368,18 +404,31 @@
       }
 
       @page {
-        margin: 48px 0;
-        @top-left { content: ""; }
-        @top-center { content: ""; }
-        @top-right { content: ""; }
-        @bottom-left { content: ""; }
-        @bottom-center { content: ""; }
-        @bottom-right { content: ""; }
+        margin: 48px 16px;
+        @top-left {
+          content: "";
+        }
+        @top-center {
+          content: "";
+        }
+        @top-right {
+          content: "";
+        }
+        @bottom-left {
+          content: "";
+        }
+        @bottom-center {
+          content: "";
+        }
+        @bottom-right {
+          content: "";
+        }
       }
 
       @media print {
         .page {
           padding: 0;
+          page-break-before: always;
         }
 
         .bar-strong,
@@ -407,34 +456,40 @@
     <div class="page">
       <div class="container">
         <header class="hero">
-          <div class="eyebrow">Resume / Frontend Developer</div>
+          <div class="eyebrow">
+            <span>Resume</span>
+            <span>Frontend Developer</span>
+          </div>
           <div class="hero-grid">
             <div>
               <h1>김지훈</h1>
               <div class="role">프론트엔드 개발자</div>
-              <p class="summary">
-                10년 이상 SaaS/B2B 프로덕트를 개선해 온 디자인 경험과 최근
-                프론트엔드 개발 실무를 결합해, 사용자 경험과 비즈니스 요구사항을
-                함께 설계하는 하이브리드형 개발자입니다. 빠른 배포와 반복 개선에
-                강점을 가지고 있습니다.
-              </p>
             </div>
             <div class="hero-meta">
               <div class="meta-row">
-                <small>Email</small>
-                <strong>lanslot84@gmail.com</strong>
+                <small>경력</small>
+                <strong>개발경력 1년 9개월 / 총 경력 12년</strong>
               </div>
               <div class="meta-row">
-                <small>Focus</small>
-                <strong
-                  >React · TypeScript · Next.js<br />SaaS · B2B · ERP</strong
-                >
-              </div>
-              <div class="meta-row">
-                <small>Current</small>
-                <strong>주식회사물류대장 / Frontend</strong>
+                <small>Links</small>
+                <div class="meta-links">
+                  <a href="mailto:lanslot84@gmail.com">이메일</a>
+                  <a href="#">포트폴리오</a>
+                  <a href="https://github.com/Ji-hoon">GitHub</a>
+                  <a href="https://ji-hoon.github.io/blog">개발 블로그</a>
+                </div>
               </div>
             </div>
+            <p class="summary">
+              <span
+                >10년 이상 SaaS/B2B 프로덕트를 개선해 온 디자인 경험과 최근
+                프론트엔드 개발 실무를 결합해, 사용자 경험과 비즈니스 요구사항을
+                함께 설계하는 하이브리드형 개발자입니다. 빠른 배포와 반복 개선
+                중심의 실행력을 바탕으로 높은 사용자 경험을 제공하면서도
+                안정적인 제품을 개발하는 것에 가치를 두며, 타 직군과 꾸준히
+                소통하며 함께 제품을 만들어가는 것에 관심이 많습니다.
+              </span>
+            </p>
           </div>
         </header>
 
@@ -540,29 +595,36 @@
                   <h3>빠른 배포와 반복 개선 중심의 실행력</h3>
                   <p>
                     완성도를 한 번에 올리는 방식보다, 빠르게 배포하고 실사용
-                    맥락에서 제품을 개선하는 흐름에 익숙합니다.
+                    맥락에서 제품을 개선하는 흐름에 익숙합니다. 2년 가까이 ERP
+                    제품을 개발하면서 점진적으로 디자인 시스템 적용 및 기능
+                    개선을 꾸준히 진행하여 제품을 고도화한 경험이 있습니다.
                   </p>
                 </article>
                 <article class="summary-item">
-                  <h3>디자인과 개발을 함께 이해하는 하이브리드 역량</h3>
+                  <h3>기획/디자인/개발을 모두 이해하는 하이브리드 역량</h3>
                   <p>
-                    UI/UX, 디자인 시스템, 프론트엔드 구현을 모두 경험해 기획
-                    의도를 실제 제품 품질로 연결하는 데 강점이 있습니다.
+                    UI/UX(프로덕트 디자인), 상세 요구사항 설계, 디자인 시스템
+                    구축, 프론트엔드 구현을 모두 경험해 기획 의도를 실제
+                    제품까지 오차없이 구현하는 데 강점이 있습니다. 요구사항이
+                    구체화되지 않은 단계에서도 기획 논의를 적극적으로 참여하며
+                    제품의 완성도를 높인 경험이 있습니다.
                   </p>
                 </article>
                 <article class="summary-item">
-                  <h3>복잡한 업무 도메인을 구조화하는 능력</h3>
+                  <h3>복잡한 업무 도메인을 해석하는 능력</h3>
                   <p>
-                    ERP, 운영툴, SaaS 제품에서 복잡한 플로우를 사용자 기준으로
-                    해석하고 화면 및 로직으로 정리해 왔습니다.
+                    ERP와 여러 운영툴 및 SaaS 제품을 고도화했던 경험을 바탕으로
+                    복잡한 플로우를 사용자 관점에서 해석하고, 요구사항을 달성할
+                    수 있는 적합한 스펙을 도출하고 구현하는 것에 강점이
+                    있습니다.
                   </p>
                 </article>
               </div>
             </section>
 
-            <section class="section">
+            <section class="section break">
               <div class="section-header">
-                <h2 class="section-title">Experience</h2>
+                <h2 class="section-title">Experiences</h2>
                 <div class="section-bar">
                   <div class="bar-strong"></div>
                   <div class="bar-light"></div>
@@ -692,14 +754,17 @@
                   <ul>
                     <li>API 및 데이터 스키마 설계</li>
                     <li>TanStack Query 기반 무한 스크롤 및 상태 관리 구현</li>
-                    <li>React Portal 기반 재사용 가능한 UI 컴포넌트 구성</li>
+                    <li>
+                      React Portal 기반 재사용 가능한 UI 컴포넌트 구성 (Modal,
+                      Dropdown)
+                    </li>
                     <li>모바일 환경을 고려한 반응형 UX 설계</li>
                   </ul>
                 </article>
 
                 <article class="project-item">
                   <h3>엘리스트랙 SW 엔지니어 트랙 프로젝트</h3>
-                  <div class="meta">2023</div>
+                  <div class="meta">부트캠프 · 2023.09. ~ 2023.12.</div>
                   <p>
                     React, TypeScript, Node.js, MongoDB 기반 교육 과정과 팀
                     프로젝트 수행
@@ -726,41 +791,17 @@
               </div>
               <div class="education-list">
                 <div class="education-item">
-                  <h3>한양대학교 ERICA</h3>
-                  <div class="meta">2003.03. ~ 2010.02.</div>
-                  <p>영상디자인 학사 · 졸업 (학점 3.21/4.5)</p>
-                </div>
-                <div class="education-item">
                   <h3>엘리스트랙 SW 엔지니어 트랙 7기</h3>
-                  <div class="meta">2023</div>
+                  <div class="meta">2023.09. ~ 2023.12.</div>
                   <p>
                     React, TypeScript, Node.js, MongoDB 기반 강의 수강 및 팀
                     프로젝트 진행
                   </p>
                 </div>
-              </div>
-            </section>
-
-            <section class="section">
-              <div class="section-header">
-                <h2 class="section-title">Links</h2>
-                <div class="section-bar">
-                  <div class="bar-strong"></div>
-                  <div class="bar-light"></div>
-                </div>
-              </div>
-              <div class="sidebar-block">
-                <div class="kv">
-                  <small>Portfolio</small>
-                  <a href="#">포트폴리오 URL</a>
-                </div>
-                <div class="kv">
-                  <small>GitHub</small>
-                  <a href="#">GitHub</a>
-                </div>
-                <div class="kv">
-                  <small>Blog</small>
-                  <a href="#">개발 블로그</a>
+                <div class="education-item">
+                  <h3>한양대학교 ERICA</h3>
+                  <div class="meta">2003.03. ~ 2010.02.</div>
+                  <p>영상디자인 학사 · 졸업 (학점 3.21/4.5)</p>
                 </div>
               </div>
             </section>
