@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useMemo, useEffect } from "react";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@600;700;800&family=Noto+Sans+KR:wght@300;400;500&display=swap');
@@ -477,20 +477,37 @@ export default function App() {
 
   const reset = () => { setFile(null); setHtmlContent(null); };
 
-  const printPDF = () => {
-    const iframe = iframeRef.current;
-    if (!iframe) return;
+  const printPDF = async () => {
+    const win = iframeRef.current?.contentWindow;
+    if (!win) return;
     setPrinting(true);
-    setTimeout(() => {
-      iframe.contentWindow?.focus();
-      iframe.contentWindow?.print();
+    try {
+      if (win.document.readyState !== "complete") {
+        await new Promise<void>((resolve) =>
+          win.addEventListener("load", () => resolve(), { once: true })
+        );
+      }
+      await win.document.fonts?.ready;
+      win.focus();
+      win.print();
+    } finally {
       setPrinting(false);
-    }, 300);
+    }
   };
 
-  const blobUrl = htmlContent
-    ? URL.createObjectURL(new Blob([htmlContent], { type: "text/html" }))
-    : null;
+  const blobUrl = useMemo(
+    () =>
+      htmlContent
+        ? URL.createObjectURL(new Blob([htmlContent], { type: "text/html" }))
+        : null,
+    [htmlContent]
+  );
+
+  useEffect(() => {
+    return () => {
+      if (blobUrl) URL.revokeObjectURL(blobUrl);
+    };
+  }, [blobUrl]);
 
   return (
     <>
